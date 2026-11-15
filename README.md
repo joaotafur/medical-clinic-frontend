@@ -1,6 +1,17 @@
-# Medical Clinic Frontend
+# Lambda Medical Clinic: Frontend
 
-The website and patient/staff portal for Medical Clinic Database System (COSC 3380, Team 9).
+This is the website for **Lambda Medical Clinic**, the COSC 3380 Team 9 database project. It has a public site (doctors, locations, services, booking) and a signed in portal for patients, doctors, nurses, receptionists, lab technicians and admins.
+
+It talks to the API in the backend repository (`medical-clinic-backend`), which holds the database, the schema and the installation steps for the database. Read that README first.
+
+## What's in the submission
+
+| File or folder | What it is |
+| --- | --- |
+| `medical-clinic-frontend/` | This repository: the React website |
+| `medical-clinic-backend/` | The API server, database schema, migrations and tests |
+| `lambda_medical_clinic_dump.sql` | SQL dump of the populated PostgreSQL 17 database |
+| Project document | What the application does: data, user roles, triggers and reports |
 
 ## Stack
 
@@ -9,7 +20,11 @@ The website and patient/staff portal for Medical Clinic Database System (COSC 33
 - **Tailwind CSS 4** for styling (theme colors and shadows are in `src/index.css`)
 - **axios** for API calls, through the shared instance in `src/api.ts`
 
-## Setup
+## Installing and running it locally
+
+1. Install [Node.js](https://nodejs.org/) 22 or newer.
+2. Load the database and start the backend first, following the backend README. It runs at http://localhost:4000.
+3. In this folder, install the packages and start the website:
 
 ```bash
 npm install
@@ -19,45 +34,47 @@ npm install
 npm run dev
 ```
 
-The dev server runs at http://localhost:5173. Other scripts:
+4. Open http://localhost:5173 and sign in at `/login` with any test account's email and password.
+
+The backend only accepts requests from `http://localhost:5173`, so keep the website on that port.
 
 | Script | What it does |
 | --- | --- |
+| `npm run dev` | Start the development server at http://localhost:5173 |
 | `npm run build` | Type-check (`tsc -b`) and build to `dist/` |
+| `npm run preview` | Serve the built site locally |
 | `npm run lint` | Run ESLint |
-| `npm run preview` | Serve the built app locally |
 
 ### Backend connection
 
-Start the backend first (`npm run dev` in `medical-clinic-backend`, port 4000). The backend only allows requests from `http://localhost:5173`, so keep the frontend on that port.
+`src/api.ts` picks the backend address:
 
-`src/api.ts` picks the backend URL:
+- **Local development**: `http://localhost:4000`, or `VITE_API_URL` if you set it in a `.env` file (git ignores it).
+- **Hosted (Vercel)**: the same site. `vercel.json` forwards `/api/*` to the hosted backend. Don't set `VITE_API_URL` in Vercel.
 
-- **Local development**: `http://localhost:4000`, or `VITE_API_URL` if you set it in a `.env` file (git-ignored).
-- **Production (Vercel)**: the same site. `vercel.json` forwards `/api/*` to the deployed backend. Don't set `VITE_API_URL` in Vercel.
-
-All requests send the login cookie (`withCredentials: true`).
+Every request sends the login cookie (`withCredentials: true`).
 
 ## Roles and pages
 
-| Role | Sign-in | Main pages |
-| --- | --- | --- |
-| Patient | `/login` (email) | Dashboard, appointments (book with the primary doctor preselected, cancel with an "are you sure" pop-up, referral status), records, billing (pay by card), forms, profile (primary doctor, contacts, insurance) |
-| Doctor | `/login` (email) | Dashboard, appointments, patients and charts, visit documentation (summary, diagnoses, prescriptions, lab orders), referrals (send with a reason, approve or deny as the primary doctor), lab orders, schedule |
-| Nurse | `/login` (email) | Dashboard, Patient Appointments (filter by name, day and office), intake (vitals, notes, allergies, home medications; editable only on the visit day at the nurse's office after check-in), supplies |
-| Receptionist | `/login` (email) | Dashboard, appointments (book, check in, check out; visits that pass without a check-in become No Show automatically), patients (register, insurance, forms, portal logins), billing |
-| Lab technician | `/login` (email) | Dashboard, lab orders and results |
-| Admin | `/login` (email) | Dashboard with yearly report, employees, offices, specialties, schedules and shifts, billing (invoices, refunds, fees), patients (primary doctor, password reset, activate or deactivate), **Reports** (3 data reports) |
+Everyone signs in on one page, `/login`, with an email and password. The email decides the account and the role.
 
-Every portal role also has a **My Profile** page with a password change.
+| Role | Main pages |
+| --- | --- |
+| Public visitor | Home, Find a Doctor, doctor profiles, Locations, Services, About, Contact, booking (sign up or sign in to finish) |
+| Patient | Dashboard, Appointments (book with the primary doctor preselected, Upcoming, History and Cancelled tabs, cancel), Medical Records (After Visit Summary PDF, prescriptions, lab results), Billing (pay by card, invoice PDF), Forms, Profile (primary doctor, contacts, insurance) |
+| Doctor | Dashboard, Appointments, visit page (summary, diagnoses, prescriptions, lab orders), Patients and full charts, Referrals (send with a reason, approve or deny as the primary doctor), Lab Orders, Schedule |
+| Nurse | Dashboard, Patient Appointments, intake (vitals, nursing notes, allergies, home medications; editable only on the visit day at the nurse's office after check-in), Supplies |
+| Receptionist | Dashboard, Appointments (book, check in, check out, No Show, cancel), Patients (register, insurance, forms, portal logins), Billing (payments, refund requests) |
+| Lab technician | Dashboard, Lab Orders (start a test, enter results) |
+| Admin | Dashboard with yearly PDF report, Employees, Offices, Specialties, Schedules and shifts, Patients, Billing (invoices, refunds, voids, fees, no-show fee), Reports (3 data reports) |
 
-`src/context/AuthContext.tsx` keeps the signed-in user, and `src/layouts/RoleLayout.tsx` keeps each role inside its own pages.
+Every signed in role also has a **My Profile** page with a password change. `src/context/AuthContext.tsx` keeps the signed in user, and `src/layouts/RoleLayout.tsx` keeps each role inside its own pages.
 
 ## Referrals
 
 1. A doctor who has seen the patient writes a referral to a specialist with a **reason**.
 2. It goes to the **patient's primary doctor**, who approves it or denies it with a reason. If the primary doctor wrote it, it's approved right away.
-3. Once approved, the patient or the front desk can book that specialist. Specialists that need a referral can't be booked without one.
+3. Once approved, the patient or the front desk can book that specialist. Specialists can't be booked without one.
 
 The patient only sees each referral's status, not the reasons.
 
@@ -69,7 +86,7 @@ The admin **Reports** page (`/admin/reports`) has 3 reports, each with its own p
 | --- | --- |
 | Missed Appointments | Where are no-shows and cancellations coming from, and which patients should we follow up with? |
 | Unpaid Balances | Who owes the clinic money, how long has it been unpaid, and is it patients or insurance that's behind? |
-| Schedule Utilization | How full is each doctor's schedule compared to the time slots they offer? |
+| Schedule Utilization | How full is each doctor's schedule compared to the time slots they offer? It also has a week calendar per doctor and an all-doctors calendar. |
 
 Every report has a time period filter (weekly, monthly, quarterly, yearly or a custom range), filters for its topic (office, doctor, specialty, patient and more), tables you can sort by clicking a column header, a search box, and **Download PDF**. Filters are saved in the page link, so a filtered report can be bookmarked.
 
@@ -82,30 +99,30 @@ src/
   api.ts               shared axios instance and apiErrorMessage()
   types.ts             shared data shapes
   index.css            Tailwind import, theme colors, shadows
-  context/             signed-in user (AuthContext)
+  context/             signed in user (AuthContext)
   layouts/             public layout and the role layout with the sidebar
-  components/          shared UI: forms, sections, tables, sidebar, reports
-    admin/             admin page frame, status badges, button styles, report period picker and sortable table
+  components/          shared UI: form fields, pop-ups, tables, sidebar, PDF reports
+    admin/             admin page frame, status badges, report period picker, sortable table, week navigation
     public/            public site pieces (header, footer, booking)
   pages/
     public/            public site and booking flow
-    auth/              patient and employee sign-in
+    auth/              sign in
     patient/ doctor/ nurse/ receptionist/ lab/ admin/
     shared/            staff profile page
     staff/             nurse and receptionist dashboard switch
   services/            older shared API helpers (admin, booking, public)
-  utils/               IDs, clinic time, print reports, small helpers
+  utils/               IDs, clinic time, print reports, calendars, vitals flags, small helpers
+public/                favicon
+vercel.json            hosting settings (forwards /api to the backend)
 ```
 
 ## PDF reports
 
-Invoices, visit summaries, the admin yearly report and the 3 admin reports print through the browser ("Save as PDF"):
+Invoices, After Visit Summaries, the admin yearly report and the 3 admin reports print through the browser ("Save as PDF"):
 
 - `components/PrintReport.tsx` is the report layout.
 - `utils/printReport.ts` opens the print window and names the file.
 
-Only one report can be on a page at a time.
-
 ## Deployment
 
-The frontend deploys to **Vercel** from the `main` branch. `vercel.json` sends `/api/*` to the backend and every other path to `index.html`, so page refreshes work.
+The website is hosted on **Vercel** and builds from the `main` branch. `vercel.json` sends `/api/*` to the backend and every other path to `index.html`, so page refreshes work.
