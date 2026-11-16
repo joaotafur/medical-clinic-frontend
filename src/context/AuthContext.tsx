@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // load the logged-in user from the session
+  // load the signed in user from the session
   useEffect(() => {
     api
       .get<AuthUser>("/api/auth/me")

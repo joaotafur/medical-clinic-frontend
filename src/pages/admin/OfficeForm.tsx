@@ -29,7 +29,7 @@ function OfficeForm({ office, cancelTo, submitLabel, onSubmit }: OfficeFormProps
   const [values, setValues] = useState<OfficeInput>(office ? { ...office, apt: office.apt ?? "" } : EMPTY_VALUES);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
-  // blocks a second submit before the disabled button re-renders
+  // blocks a second submit until the button shows as disabled
   const submitting = useRef(false);
 
   function update(field: keyof OfficeInput) {

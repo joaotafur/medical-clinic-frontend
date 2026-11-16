@@ -47,7 +47,7 @@ function ScheduleForm({ schedule, cancelTo, submitLabel, onSubmit }: ScheduleFor
   const [shiftTypeId, setShiftTypeId] = useState(schedule ? String(schedule.shiftTypeId) : "");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
-  // blocks a second submit before the disabled button re-renders
+  // blocks a second submit until the button shows as disabled
   const submitting = useRef(false);
 
   useEffect(() => {
@@ -214,7 +214,7 @@ function ScheduleStatus({ schedule, onChange }: { schedule: Schedule; onChange: 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  // blocks a second request before the disabled buttons re-render
+  // blocks a second request until the buttons show as disabled
   const busy = useRef(false);
 
   async function changeStatus(isActive: boolean) {

@@ -70,7 +70,7 @@ const GROUP_LABELS: Record<string, string> = { doctor: "Doctor", office: "Office
 const OUTCOME_LABELS: Record<string, string> = { missed: "All missed", noshow: "No-shows", cancelled: "Cancellations", late: "Late cancellations" };
 const percent = (value: number | null) => (value == null ? "N/A" : `${value}%`);
 
-// which doctors, offices or specialties lose the most visits to no-shows and cancellations
+// which doctors, offices or specialties lose the most visits to no shows and cancellations
 export function AdminMissedAppointmentsReport() {
   // the filters live in the URL, so a filtered report can be bookmarked or shared
   const [params, setParams] = useSearchParams();

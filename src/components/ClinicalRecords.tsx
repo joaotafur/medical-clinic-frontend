@@ -311,7 +311,7 @@ export interface NursingNote {
   updatedAt: string | null;
 }
 
-// read-only list of nursing notes
+// list of nursing notes that can't be edited
 export function NursingNotesList({ notes }: { notes: NursingNote[] }) {
   if (notes.length === 0) return <p className="text-slate-500">No nursing notes.</p>;
   return (
