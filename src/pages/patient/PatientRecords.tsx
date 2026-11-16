@@ -75,7 +75,7 @@ export function PatientRecords() {
     printReport(`Visit Summary ${visit.date}`);
   }
 
-  // load one visit's full record for the summary pop-up
+  // load one visit's full record for the summary popup
   async function viewVisit(appointmentId: number) {
     setError("");
     try {

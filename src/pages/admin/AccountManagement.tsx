@@ -25,7 +25,7 @@ export function AccountManagement({ employee, onChange }: { employee: AdminEmplo
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  // blocks a second request before the disabled buttons re-render
+  // blocks a second request until the buttons show as disabled
   const busy = useRef(false);
 
   function openPanel(next: Panel) {

@@ -17,7 +17,7 @@ function SpecialtyStatus({ specialty, onChange }: { specialty: SpecialtyDetails;
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  // blocks a second request before the disabled buttons re-render
+  // blocks a second request until the buttons show as disabled
   const busy = useRef(false);
 
   const inUse = specialty.activeDoctorCount + specialty.activeScheduleCount > 0;

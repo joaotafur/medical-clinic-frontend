@@ -93,7 +93,7 @@ export function AdminShiftSettings() {
   const [form, setForm] = useState<ShiftInput>(EMPTY_FORM);
   const [notice, setNotice] = useState<Notice | null>(null);
   const [saving, setSaving] = useState(false);
-  // blocks a second request before the disabled buttons re-render
+  // blocks a second request until the buttons show as disabled
   const busy = useRef(false);
 
   useEffect(() => {

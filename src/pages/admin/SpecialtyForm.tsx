@@ -23,7 +23,7 @@ function SpecialtyForm({ specialty, cancelTo, submitLabel, onSubmit }: Specialty
   const [visitPrice, setVisitPrice] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
-  // blocks a second submit before the disabled button re-renders
+  // blocks a second submit until the button shows as disabled
   const submitting = useRef(false);
 
   async function handleSubmit(e: FormEvent) {
