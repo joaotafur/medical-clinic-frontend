@@ -72,7 +72,7 @@ interface RefundRequest {
 interface Fee {
   feeId: number | null;
   category: string;
-  linkId: number;
+  linkId: number | null;
   name: string;
   type: string | null;
   price: string | null;
@@ -406,14 +406,14 @@ function FeesTab() {
       )}
 
       <div className="flex gap-2">
-        {["Visit", "Lab Test", "Medication"].map((c) => (
+        {["Visit", "Lab Test", "Medication", "No Show"].map((c) => (
           <button
             key={c}
             type="button"
             onClick={() => setCategory(c)}
             className={`rounded-lg px-4 py-1.5 text-sm font-medium shadow-button ${category === c ? "bg-navy text-white" : "bg-white text-slate-700 hover:bg-slate-50"}`}
           >
-            {c === "Visit" ? "Visits" : c === "Lab Test" ? "Lab Tests" : "Medications"}
+            {c === "Visit" ? "Visits" : c === "Lab Test" ? "Lab Tests" : c === "Medication" ? "Medications" : "No-Show Fee"}
           </button>
         ))}
       </div>
@@ -424,6 +424,10 @@ function FeesTab() {
         <p className="text-sm text-slate-600">
           Each visit price belongs to a specialty. To add or turn off a visit type, go to{" "}
           <Link to="/admin/specialties" className="font-medium text-navy underline">Specialties</Link>.
+        </p>
+      ) : category === "No Show" ? (
+        <p className="text-sm text-slate-600">
+          When a patient misses an appointment, they get an invoice for this fee. Turn it off in Edit to stop billing missed appointments.
         </p>
       ) : (
         <div className="flex justify-end">
@@ -461,7 +465,7 @@ function FeesTab() {
                     <td className="whitespace-nowrap px-4 py-3 text-slate-500">{f.updatedAt ?? <NotAvailable />}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-right">
                       <TextButton onClick={() => setEditing(f)}>{f.feeId === null ? "Add Price" : "Edit"}</TextButton>
-                      {f.category !== "Visit" &&
+                      {(f.category === "Lab Test" || f.category === "Medication") &&
                         (f.linkActive ? (
                           <TextButton danger className="ml-4" onClick={() => setTurningOff(f)}>Deactivate</TextButton>
                         ) : (
@@ -577,7 +581,7 @@ function FeeModal({ fee, onClose, onSaved }: { fee: Fee; onClose: () => void; on
         <Field label="Price ($)" required inputMode="decimal" placeholder="150.00" value={price} onChange={(e) => setPrice(e.target.value)} />
         <Field
           label="Type"
-          placeholder={fee.category === "Visit" ? "e.g. Specialist" : fee.category === "Lab Test" ? "e.g. Blood Test" : "e.g. Blood Pressure"}
+          placeholder={fee.category === "Visit" ? "e.g. Specialist" : fee.category === "Lab Test" ? "e.g. Blood Test" : fee.category === "No Show" ? "e.g. Missed Visit" : "e.g. Blood Pressure"}
           value={type}
           onChange={(e) => setType(e.target.value)}
         />

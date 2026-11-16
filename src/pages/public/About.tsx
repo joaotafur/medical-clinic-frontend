@@ -37,9 +37,9 @@ export function AboutPage() {
   return (
     <>
       <section className={`${CONTAINER} pt-10 pb-14 sm:pt-14 lg:pb-16`}>
-        <h1 className="font-heading text-4xl font-semibold text-navy sm:text-5xl">About Medical Clinic</h1>
+        <h1 className="font-heading text-4xl font-semibold text-navy sm:text-5xl">About Lambda Medical Clinic</h1>
         <p className="mt-5 max-w-3xl text-xl leading-relaxed text-slate-600">
-          Medical Clinic is a group of clinic offices where patients see primary care doctors and specialists. Our
+          Lambda Medical Clinic is a group of clinic offices where patients see primary care doctors and specialists. Our
           physicians, nurses, and receptionists work together across our clinic locations.
         </p>
       </section>

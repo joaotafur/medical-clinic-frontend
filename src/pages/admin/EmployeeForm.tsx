@@ -135,7 +135,7 @@ function EmployeeForm({ employee, cancelTo, submitLabel, onSubmit }: EmployeeFor
   const [loadError, setLoadError] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
-  // blocks a second submit before the disabled button re-renders
+  // blocks a second submit until the button shows as disabled
   const submitting = useRef(false);
 
   useEffect(() => {

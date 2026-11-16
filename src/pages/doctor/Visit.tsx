@@ -138,7 +138,7 @@ export function DoctorVisit() {
   const [durationDays, setDurationDays] = useState("");
   const [rxError, setRxError] = useState("");
   const [rxSaving, setRxSaving] = useState(false);
-  // blocks a second request before the disabled buttons re-render
+  // blocks a second request until the buttons show as disabled
   const rxBusy = useRef(false);
 
   // lab order form for this visit

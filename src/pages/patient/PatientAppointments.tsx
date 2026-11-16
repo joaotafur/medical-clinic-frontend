@@ -296,7 +296,7 @@ export function PatientAppointments() {
         timeSlotId: selectedSlot.timeSlotId,
         referralId: selectedSlot.referralId,
       });
-      // show the new appointment in the booked pop-up
+      // show the new appointment in the booked popup
       setDetails({
         booked: true,
         appointment: {
@@ -315,7 +315,7 @@ export function PatientAppointments() {
     }
   }
 
-  // cancel the appointment after the patient confirms in the pop-up
+  // cancel the appointment after the patient confirms in the popup
   async function cancelAppointment(appointment: Appointment) {
     setError("");
     setMessage("");

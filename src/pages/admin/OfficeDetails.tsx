@@ -17,7 +17,7 @@ function OfficeStatus({ office, onChange }: { office: OfficeDetails; onChange: (
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  // blocks a second request before the disabled buttons re-render
+  // blocks a second request until the buttons show as disabled
   const busy = useRef(false);
 
   const assigned = office.activeEmployeeCount + office.activeScheduleCount > 0;
